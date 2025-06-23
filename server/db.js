@@ -1,3 +1,5 @@
+// This file sets up the database connection using mssql and environment variables.
+
 const sql = require("mssql");
 require("dotenv").config();
 
