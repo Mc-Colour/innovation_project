@@ -6,6 +6,7 @@ import { AuthContext } from "./context/AuthContext";
 import HorseDetail from "./pages/HorseDetail";
 import WeightTracking from "./pages/WeightTracking";
 import Education from "./pages/Education";
+import CareReminders from "./pages/CareReminders";
 
 function Home() {
     return <h1>Welcome to Equiwelf</h1>;
@@ -39,6 +40,7 @@ function App() {
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/horses/:id/weight" element={<WeightTracking />} />
                 <Route path="/education" element={<Education />} />
+                <Route path="/reminders" element={<CareReminders />} />
             </Routes>
         </>
     );

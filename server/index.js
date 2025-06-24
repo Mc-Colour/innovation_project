@@ -101,7 +101,7 @@ app.post("/api/login", async (req, res) => {
         // if auth is successful create a JWT token,
         // the token contains the user ID and signed with secret key
         //this token can be used to authenticate future requests
-        const token = jwt.sign({ userId: user.UserID }, JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ userId: user.UserID }, JWT_SECRET, { expiresIn: '7d' });
         res.json({ token }); // send the token back to the client
     } catch (error) {
         console.error("login error:", error);
@@ -209,5 +209,45 @@ app.post("/api/horses/:id/weights", authenticate, async (req, res) => {
     } catch (error) {
         console.error("Error adding weight entry:", error);
         res.status(500).send({ error: "Failed to add weight entry" });
+    }
+});
+
+// POST a new care reminder by horse
+app.post("/api/reminders", authenticate, async (req, res) => {
+    const { horseId, type, dueDate } = req.body; // get horse ID, type and due date from request body
+    await db.poolConnect;
+    try {
+        await db.pool.request()
+            .input("horseId", db.sql.Int, horseId)
+            .input("type", db.sql.VarChar, type)
+            .input("dueDate", db.sql.Date, dueDate)
+            .query("INSERT INTO CareReminder (HorseID, Type, DueDate) VALUES (@horseId, @type, @dueDate)");
+        res.status(201).send("Care reminder added");
+    } catch (error) {
+        console.error("Error adding care reminder:", error);
+        res.status(500).send({ error: "Failed to add care reminder" });
+    }
+});
+
+// GET all care reminders for all horses belonging to logged in user
+app.get("/api/reminders", authenticate, async (req, res) => {
+    const userId = req.user.userId;
+    await db.poolConnect;
+
+    try {
+        const query = `
+            SELECT r.*, h.Name AS HorseName
+            FROM CareReminder r
+            JOIN Horse h ON r.HorseID = h.HorseID
+            WHERE h.UserId = @userId
+            ORDER BY r.DueDate ASC
+        `;
+        const result = await db.pool.request()
+            .input("userId", db.sql.Int, userId)
+            .query(query);
+        res.json(result.recordset);
+    } catch (error) {
+        console.error("Error fetching care reminders:", error);
+        res.status(500).send({ error: "Failed to fetch care reminders" });
     }
 });
