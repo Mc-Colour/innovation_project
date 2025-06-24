@@ -13,11 +13,13 @@ app.use(cors()); // aplows front end to access backend even if on different port
 app.use(express.json()); 
 
 // GET horses
-app.get("/api/horses", async (req, res) => {
-    console.log("GET /api/horses called");
+app.get("/api/horses",authenticate, async (req, res) => {
+    console.log("GET /api/horses called by user");
     await db.poolConnect; // ensure database is connected
     try {
-        const result = await db.pool.request().query("SELECT * FROM Horse");
+        const result = await db.pool.request()
+            .input("userId", db.sql.Int, req.user.userId) // use user ID from authenticated request
+            .query("SELECT * FROM Horse WHERE UserId = @userId"); // fetch horses for the authenticated user
         res.json(result.recordset);
     } catch (error) {
         console.error("Error fetching horses:", error);
