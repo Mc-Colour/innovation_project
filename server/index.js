@@ -5,7 +5,7 @@ require('dotenv').config();
 
 const bcrypt = require('bcrypt'); // brings in bcrypt for password hashing
 const jwt = require('jsonwebtoken'); 
-const JWT_SECRET = "yoursecretkey";
+const JWT_SECRET = process.env.JWT_SECRET; // bring in secret key for JWT from enviornment variables
 
 const db = require('./db'); // import database connection
 const app = express(); // creates an instance of express
@@ -29,8 +29,8 @@ app.get("/api/horses", async (req, res) => {
 app.post("/api/horses", authenticate, async (req, res) => {
     // Extract horse data form request body
     const { name, breed, age, weight } = req.body;
-    const userId = req.user.id; // Get user ID from authenticated request
-
+    const userId = req.user.userId; // Get user ID from authenticated request
+    console.log("Decoded token:", req.user);
     await db.poolConnect; // ensure database is connected
     try {
         //insert new horse into database linking to authenticated user
@@ -99,7 +99,7 @@ app.post("/api/login", async (req, res) => {
         // if auth is successful create a JWT token,
         // the token contains the user ID and signed with secret key
         //this token can be used to authenticate future requests
-        const token = jwt.sign({ id: user.Id }, JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ userId: user.UserID }, JWT_SECRET, { expiresIn: '1h' });
         res.json({ token }); // send the token back to the client
     } catch (error) {
         console.error("login error:", error);

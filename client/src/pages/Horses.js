@@ -2,7 +2,8 @@
 //shows horses in list
 //allows adding a new horse
 // when you add a horse it updates the list
-
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext"; // import AuthContext to access user info
 import React, {
     useState,
     useEffect,
@@ -20,12 +21,18 @@ export default function Horses() {
         weight: ""
     });
 
+    const {token} = useContext(AuthContext); // get token from AuthContext
+
     // Fetch horses from backend on load
     useEffect(() => {
-        axios.get("http://localhost:3001/api/horses")
+        axios.get("http://localhost:3001/api/horses", {
+            headers: {
+                Authorization: `Bearer ${token}` // include token in request headers
+            }
+        })
             .then(res => setHorses(res.data))
             .catch(err => console.error("Error fetching horses:", err));
-    }, []);
+    }, [token]);
 
     // Handle form input changes
     const handleChange = (e) => {
@@ -40,11 +47,21 @@ export default function Horses() {
                 name: form.name,
                 breed: form.breed,
                 age: parseInt(form.age),
-                weight: parseInt(form.weight),
-                userID: 1 // temporary hardcoded user ID
-            });
+                weight: parseInt(form.weight)
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}` 
+                } 
+            }
+            );
             // Fetch updated horse list after adding a new horse
-            const res = await axios.get("http://localhost:3001/api/horses");
+            const res = await axios.get("http://localhost:3001/api/horses", {
+                headers: {
+                    Authorization: `Bearer ${token}` 
+                }
+            });
+
             setHorses(res.data);
             // Reset form fields
             setForm({
