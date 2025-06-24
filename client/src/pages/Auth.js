@@ -27,7 +27,7 @@ export default function Auth() {
                     email,
                     password,
                 });
-                login(res.data.token); // call login function from context with the token
+                login(response.data.token); // call login function from context with the token
                 navigate("/horses"); // redirect to horses page after successful login
             }
         } catch (error) {
