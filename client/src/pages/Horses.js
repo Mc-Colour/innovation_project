@@ -66,7 +66,7 @@ export default function Horses() {
                 <ul>
                     {horses.map((horse) => (
                         <li key={horse.Id}>
-                            {horse.Name} - {horse.Breed} ({horse.Age} years
+                            {horse.Name} - {horse.Breed} ({horse.Age} years old)
                         </li>
                     ))}
                 </ul>
