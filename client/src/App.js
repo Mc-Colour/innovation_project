@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link, useNavigate} from "react-
 import Horses from "./pages/Horses";
 import Auth from "./pages/Auth";
 import { AuthContext } from "./context/AuthContext";
+import HorseDetail from "./pages/HorseDetail";
 
 function Home() {
     return <h1>Welcome to Equiwelf</h1>;
@@ -32,6 +33,7 @@ function App() {
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/horses" element={<Horses />} />
+                <Route path="/horses/:id" element={<HorseDetail />} />
                 <Route path="/auth" element={<Auth />} />
             </Routes>
         </>

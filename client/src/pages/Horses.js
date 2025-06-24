@@ -4,6 +4,7 @@
 // when you add a horse it updates the list
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext"; // import AuthContext to access user info
+import { Link } from "react-router-dom"; // import Link to navigate to horse details
 import React, {
     useState,
     useEffect,
@@ -82,13 +83,18 @@ export default function Horses() {
             ) : (
                 <ul>
                     {horses.map((horse) => (
-                        <li key={horse.Id}>
-                            {horse.Name} - {horse.Breed} ({horse.Age} years old)
+                        <li key={horse.HorseID}>
+                            <Link to={`/horses/${horse.HorseID}`}>
+                                {horse.Name} - {horse.Breed} ({horse.Age} years old)
+                            </Link>
                         </li>
                     ))}
                 </ul>
             )}
-            <h3>Add a New Horse</h3>
+            <h3>Add a New Horse</h3> 
+            {!token ? (
+                <p>Please log in to add horses.</p>
+            ) : (
             <form onSubmit={handleSubmit}>
                 <input
                     type="text"
@@ -121,6 +127,7 @@ export default function Horses() {
                 />
                 <button type="submit">Add Horse</button>
             </form>
+            )}
         </div>
     );
 }

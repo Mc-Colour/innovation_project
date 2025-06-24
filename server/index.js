@@ -108,3 +108,26 @@ app.post("/api/login", async (req, res) => {
         res.status(500).send({ error: "Login Failed" });
     }
 });
+
+// GET horse by ID
+app.get("/api/horses/:id", authenticate, async (req, res) => {
+    const horseId = req.params.id;
+    const userId = req.user.userId; // Get user ID from authenticated request
+
+    await db.poolConnect;
+
+    try {
+        const result = await db.pool
+            .request()
+            .input("id", db.sql.Int, parseInt(horseId)) // parse horseId to integer
+            .input("userId", db.sql.Int, userId)
+            .query("SELECT * FROM Horse WHERE HorseID = @id AND UserId = @userId");
+        if (result.recordset.length === 0) {
+            return res.status(404).send("Horse not found");
+        }
+        res.json(result.recordset[0]); // return the horse details
+    } catch (error) {
+        console.error("Error fetching horse details:", error);
+        res.status(500).json({ error: "Failed to fetch horse details" });
+    }
+});
