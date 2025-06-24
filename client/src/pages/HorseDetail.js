@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
+import { Link } from 'react-router-dom';
 
 export default function HorseDetail() {
     const { id } = useParams(); // get horse ID from URL
@@ -27,6 +28,7 @@ export default function HorseDetail() {
             <p><strong>Breed:</strong> {horse.Breed}</p>
             <p><strong>Age:</strong> {horse.Age} years</p>
             <p><strong>Weight:</strong> {horse.CurrentWeight} kg</p>
+            <Link to={`/horses/${id}/weight`}>View Weight History</Link>
         </div>
     );
 }

@@ -23,6 +23,7 @@ export default function Horses() {
     });
 
     const {token} = useContext(AuthContext); // get token from AuthContext
+    const [editingID, setEditingID] = useState(null); // state to track which horse is being edited
 
     // Fetch horses from backend on load
     useEffect(() => {
@@ -43,25 +44,26 @@ export default function Horses() {
     // Handle form submission to add a new horse
     const handleSubmit = async (e) => {
         e.preventDefault(); // prevent page reload on form submit
-        try {
-            await axios.post("http://localhost:3001/api/horses", {
-                name: form.name,
-                breed: form.breed,
-                age: parseInt(form.age),
-                weight: parseInt(form.weight)
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${token}` 
-                } 
+        
+        const payload = {
+            name: form.name,
+            breed: form.breed,
+            age: parseInt(form.age),
+            weight: parseInt(form.weight)
+        };
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}` // include token in request headers
             }
-            );
-            // Fetch updated horse list after adding a new horse
-            const res = await axios.get("http://localhost:3001/api/horses", {
-                headers: {
-                    Authorization: `Bearer ${token}` 
-                }
-            });
+        }
+        try {
+            if (editingID) {
+                await axios.put(`http://localhost:3001/api/horses/${editingID}`, payload, config);
+            } else {
+                await axios.post("http://localhost:3001/api/horses", payload, config);
+            }
+            
+            const res = await axios.get("http://localhost:3001/api/horses", config);
 
             setHorses(res.data);
             // Reset form fields
@@ -73,6 +75,26 @@ export default function Horses() {
             });
         } catch (error) {
             console.error("Error adding horse:", error);
+        }
+    };
+    // Handle deleting a horse
+    const handleDelete = async (id) => {
+        try {
+            // delete horse by ID
+            await axios.delete(`http://localhost:3001/api/horses/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}` 
+                }
+            });
+            // After deletion, fetch the updated list of horses
+            const res = await axios.get("http://localhost:3001/api/horses", {
+                headers: {
+                    Authorization: `Bearer ${token}` 
+                }
+            });
+            setHorses(res.data); // update horses list after deletion
+        } catch (error) {
+            console.error("Error deleting horse:", error);
         }
     };
     return (
@@ -87,6 +109,22 @@ export default function Horses() {
                             <Link to={`/horses/${horse.HorseID}`}>
                                 {horse.Name} - {horse.Breed} ({horse.Age} years old)
                             </Link>
+                            {token && (
+                                <>
+                                    <button onClick={() => {
+                                        setForm({
+                                            name: horse.Name,
+                                            breed: horse.Breed,
+                                            age: horse.Age,
+                                            weight: horse.CurrentWeight
+                                        });
+                                        setEditingID(horse.HorseID); // set the ID of the horse being edited
+                                    }}>
+                                        Edit
+                                    </button>
+                                    <button onClick={() => { handleDelete(horse.HorseID); }}>Delete</button>
+                                </>
+                            )}
                         </li>
                     ))}
                 </ul>
@@ -125,7 +163,7 @@ export default function Horses() {
                     value={form.weight}
                     onChange={handleChange}
                 />
-                <button type="submit">Add Horse</button>
+                <button type="submit">{editingID? "Edit Horse" : "Add Horse"}</button>
             </form>
             )}
         </div>

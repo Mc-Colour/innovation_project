@@ -23,7 +23,7 @@ app.get("/api/horses",authenticate, async (req, res) => {
         res.json(result.recordset);
     } catch (error) {
         console.error("Error fetching horses:", error);
-        res.status(500).json({ error: "Failed to fetch horses" });
+        res.status(500).send({ error: "Failed to fetch horses" });
     }
 });
 
@@ -51,7 +51,7 @@ app.post("/api/horses", authenticate, async (req, res) => {
         res.status(201).send("Horse added");
     } catch (error) {
         console.error("Error adding horse:", error);
-        res.status(500).json({ error: "Failed to add horse" });
+        res.status(500).send({ error: "Failed to add horse" });
     }
 });
 
@@ -66,7 +66,7 @@ app.post("/api/register", async (req, res) => {
 
     try {
         // hash the password securely before storing it
-        const hased = await bcrypt.hash(password, 10);
+        const hashed = await bcrypt.hash(password, 10);
 
         // insert new user into database
         await db.pool.request()
@@ -77,7 +77,7 @@ app.post("/api/register", async (req, res) => {
         res.status(201).send("User registered");
     } catch (error) {
         console.error("Error registering user:", error);
-        res.status(500).json({ error: "Failed to register user" });
+        res.status(500).send({ error: "Failed to register user" });
     }
 });
 
@@ -128,6 +128,86 @@ app.get("/api/horses/:id", authenticate, async (req, res) => {
         res.json(result.recordset[0]); // return the horse details
     } catch (error) {
         console.error("Error fetching horse details:", error);
-        res.status(500).json({ error: "Failed to fetch horse details" });
+        res.status(500).send({ error: "Failed to fetch horse details" });
+    }
+});
+
+// PUT horse by ID
+app.put("/api/horses/:id", authenticate, async (req, res) => {
+    const { name, breed, age, weight } = req.body;
+    const horseId = req.params.id;
+    const userId = req.user.userId; // Get user ID from authenticated request
+    await db.poolConnect;
+    try {
+        const reult = await db.pool.request()
+            .input("id", db.sql.Int, parseInt(horseId)) 
+            .input("userId", db.sql.Int, userId)
+            .input("name", db.sql.VarChar, name)
+            .input("breed", db.sql.VarChar, breed)
+            .input("age", db.sql.Int, age)
+            .input("weight", db.sql.Int, weight)
+            .query(`
+                UPDATE Horse
+                SET Name = @name, Breed = @breed, Age = @age, CurrentWeight = @weight
+                WHERE HorseID = @id AND UserId = @userId
+            `);
+        res.send("Horse updated");
+    } catch (error) {
+        console.error("Error updating horse:", error);
+        res.status(500).send({ error: "Failed to update horse" });
+    }
+});
+
+// DELETE horse by ID
+app.delete("/api/horses/:id", authenticate, async (req, res) => {
+    const horseId = req.params.id;
+    const userId = req.user.userId; // Get user ID from authenticated request
+    await db.poolConnect;
+
+    try {
+        await db.pool.request()
+            .input("id", db.sql.Int, parseInt(horseId))
+            .input("userId", db.sql.Int, userId)
+            .query("DELETE FROM Horse WHERE HorseID = @id AND UserId = @userId");
+        res.send("Horse deleted");
+    } catch (error) {
+        console.error("Error deleting horse:", error);
+        res.status(500).send({ error: "Failed to delete horse" });
+    }
+});
+
+// GET weight entries for a horse
+app.get("/api/horses/:id/weights", authenticate, async (req, res) => {
+    const horseId = req.params.id;
+    await db.poolConnect;
+
+    try {
+         const result = await db.pool.request()
+            .input("id", db.sql.Int, parseInt(horseId))
+            .query("SELECT * FROM WeightHistory WHERE HorseID = @id ORDER BY EntryDate DESC");
+        res.json(result.recordset);
+    } catch (error) {
+        console.error("Error fetching weight history:", error);
+        res.status(500).send({ error: "Failed to fetch weight history" });
+    }
+});
+
+// POST weight entry for a horse
+app.post("/api/horses/:id/weights", authenticate, async (req, res) => {
+    const horseId = req.params.id;
+    const { weight } = req.body;
+    await db.poolConnect;
+
+    try {
+        const query = `INSERT INTO WeightHistory (HorseID, Weight, EntryDate)
+            VALUES (@horseId, @weight, GETDATE())`; // use GETDATE() to insert current date`;
+        await db.pool.request()
+            .input("horseId", db.sql.Int, parseInt(horseId))
+            .input("weight", db.sql.Int, weight)
+            .query(query);
+        res.status(201).send("Weight entry added");
+    } catch (error) {
+        console.error("Error adding weight entry:", error);
+        res.status(500).send({ error: "Failed to add weight entry" });
     }
 });
