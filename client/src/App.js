@@ -7,6 +7,8 @@ import HorseDetail from "./pages/HorseDetail";
 import WeightTracking from "./pages/WeightTracking";
 import Education from "./pages/Education";
 import CareReminders from "./pages/CareReminders";
+import "./styles/App.css";
+import Header from "./components/Header";
 
 function Home() {
     return <h1>Welcome to Equiwelf</h1>;
@@ -23,16 +25,7 @@ function App() {
     };
     return (
         <>
-            <nav style={{ padding: "1rem", borderBottom: "1px solid #ccc"}}>
-                <Link to="/">Home</Link> | <Link to="/horses">My Horses</Link> |
-                {!token ? (
-                    <Link to ="/auth">Login</Link>
-                ): (
-                    <button onClick={handleLogout} style={{ marginLeft: "1rem" }}>
-                        Logout
-                    </button>
-                )}
-            </nav>
+            <Header onLogout={handleLogout} isAuthenticated={!!token} /> // Reusable header component
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/horses" element={<Horses />} />
