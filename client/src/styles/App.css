@@ -63,18 +63,20 @@ body {
 }
 
 /* Horse Previw Card */
-.horse-preview-card {
+.horse-preview-card,
+.weight-summary-card {
     background-color: #fff;
     border: 2px solid #72a276;
     border-radius: 20px;
     padding: 0.25rem 1.5rem 1.5rem 1.5rem;
     max-width: 300px;
-    margin: 0 auto;
+    margin: 2rem auto;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     text-align: center;
 }
 
-.horse-preview-card h2 {
+.horse-preview-card h2,
+.weight-summary-card h2 {
     font-size: 1.8rem;
     color: #333;
     margin-bottom: 1rem;
@@ -103,4 +105,34 @@ body {
 .no-selection {
     font-style: italic;
     color: #666
+}
+
+/* Weight Summary Card */
+/*
+.weight-summary-card {
+    background-color: #fff;
+    border: 2px solid #72a276;
+    border-radius: 20px;
+    padding: 0.25rem 1.5rem 1.5rem 1.5rem;
+    max-width: 300px;
+    margin: 2rem auto;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+/*
+.weight-summary-card h2 {
+    margin-bottom: 1rem;
+    color: #333;
+}
+*/
+.weight-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem;
+}
+
+.weight-list li {
+    font-size: 1rem;
+    margin: 0.5rem 0;
 }
