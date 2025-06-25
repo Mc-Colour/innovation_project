@@ -49,3 +49,58 @@ body {
 .nav-links a:hover {
     text-decoration: underline;
 }
+
+/* Home Page */
+.home-container{
+    padding: 2rem;
+    text-align: center;
+}
+
+.home-title {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 2rem;
+}
+
+/* Horse Previw Card */
+.horse-preview-card {
+    background-color: #fff;
+    border: 2px solid #72a276;
+    border-radius: 20px;
+    padding: 1.5rem;
+    max-width: 400px;
+    margin: 0 auto;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    text-align: left;
+}
+
+.horse-preview-card h2 {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.horse-preview-card p {
+    font-size: 1rem;
+    margin: 0.5rem 0;
+}
+
+.view-link{
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: #86cd82;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: 500;
+}
+
+.view-link:hover {
+    background-color: #72a276;
+}
+
+.no-selection {
+    font-style: italic;
+    color: #666
+}

@@ -5,12 +5,15 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { AuthProvider } from './context/AuthContext';
 import { BrowserRouter } from 'react-router-dom';
+import { SelectedHorseProvider } from './context/SelectedHorseContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
     <AuthProvider>
-      <App />
+      <SelectedHorseProvider>
+        <App />
+      </SelectedHorseProvider>
     </AuthProvider>
   </BrowserRouter>
   

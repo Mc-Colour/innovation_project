@@ -9,10 +9,7 @@ import Education from "./pages/Education";
 import CareReminders from "./pages/CareReminders";
 import "./styles/App.css";
 import Header from "./components/Header";
-
-function Home() {
-    return <h1>Welcome to Equiwelf</h1>;
-}
+import Home from "./pages/Home";
 
 function App() {
     const { token, logout } = useContext(AuthContext);

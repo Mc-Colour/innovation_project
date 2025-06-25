@@ -5,6 +5,7 @@
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext"; // import AuthContext to access user info
 import { Link } from "react-router-dom"; // import Link to navigate to horse details
+import { SelectedHorseContext } from "../context/SelectedHorseContext"; // import SelectedHorseContext to manage selected horse state
 import React, {
     useState,
     useEffect,
@@ -14,6 +15,8 @@ import axios from "axios";
 
 // form input fields for adding a new horse
 export default function Horses() {
+    const { setSelectedHorse } = useContext(SelectedHorseContext); // get function to set selected horse
+    const {selectedHorse} = useContext(SelectedHorseContext); // get currently selected horse
     const [horses, setHorses] = useState([]);
     const [form, setForm] = useState({
         name: "",
@@ -103,12 +106,15 @@ export default function Horses() {
             {horses.length === 0 ? (
                 <p>No horses found. Add your first horse!</p>
             ) : (
+                <>
+                <>{selectedHorse && <p>Currently selected: {selectedHorse.Name}</p>}
                 <ul>
                     {horses.map((horse) => (
                         <li key={horse.HorseID}>
                             <Link to={`/horses/${horse.HorseID}`}>
                                 {horse.Name} - {horse.Breed} ({horse.Age} years old)
                             </Link>
+                            <button onClick={() => setSelectedHorse(horse)}>Select</button>
                             {token && (
                                 <>
                                     <button onClick={() => {
@@ -128,6 +134,8 @@ export default function Horses() {
                         </li>
                     ))}
                 </ul>
+                </>
+                </>
             )}
             <h3>Add a New Horse</h3> 
             {!token ? (
