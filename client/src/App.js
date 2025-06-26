@@ -22,7 +22,7 @@ function App() {
     };
     return (
         <>
-            <Header onLogout={handleLogout} isAuthenticated={!!token} /> // Reusable header component
+            <Header onLogout={handleLogout} isAuthenticated={!!token} /> 
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/horses" element={<Horses />} />

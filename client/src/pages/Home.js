@@ -113,6 +113,19 @@ export default function Home() {
                             <p>40 minute ride<br /><small>1pm</small></p>
                         </div>
                     </div>
+
+                    <div className="education-card">
+                        <h2>Education Zone</h2>
+                        <div className="education-article-preview">
+                            <h3>Understanding Equine Obesity</h3>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                                Curabitur elementum massa risus, quis ultrices magna dictum vitae.
+                            </p>
+                        </div>
+
+                        <Link to="/education" className="view-link">Read More</Link>
+                    </div>
                         
                     
                 </>
