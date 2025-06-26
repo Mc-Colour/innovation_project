@@ -2,6 +2,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
+import { ReactComponent as HomeIcon } from '../img/Home.svg'; 
+import { Link } from 'react-router-dom';
 
 export default function CareReminders() {
     const { token } = useContext(AuthContext);
@@ -62,42 +64,62 @@ export default function CareReminders() {
     };
 
     return (
-        <div>
-            <h2>Care Reminders</h2>
-            <form onSubmit={handleSubmit}>
-                <select name="horseId" value={form.horseId} onChange={handleChange} required>
-                    <option value="">Select Horse</option>
-                    {horses.map((horse) => (
-                        <option key={horse.HorseID} value={horse.HorseID}>
-                            {horse.Name}
-                        </option>
-                    ))}
-                </select>
-                <input 
-                    type="text" 
-                    name="type" 
-                    value={form.type} 
-                    onChange={handleChange} 
-                    placeholder="Reminder Type" 
-                    required 
-                />
-                <input 
-                    type="date" 
-                    name="dueDate" 
-                    value={form.dueDate} 
-                    onChange={handleChange} 
-                    required 
-                />
-                <button type="submit">Add Reminder</button>
-            </form>
-            <ul>
-                {reminders.map((reminder) => (
-                    <li key={reminder.ReminderID}>
-                        {new Date(reminder.DueDate).toLocaleDateString()} - {reminder.Type}
-                        <strong> - {reminder.HorseName}</strong>
-                    </li>
-                ))}
-            </ul>
+        <div className="home-container">
+            <div className="care-reminder-card">
+                <h2>Care Reminders</h2>
+                {reminders.length > 0 ? (
+                    <ul className="reminder-list">
+                        {reminders.map((r) => (
+                            <li key={r.ReminderID}>
+                                {r.Type} - Due: {new Date(r.DueDate).toLocaleDateString()} - {r.HorseName}
+                            </li>
+                        ))}
+                    </ul>
+                ) : (
+                    <p>No care reminders found.</p>
+                )}
+            </div>
+
+            <div className="horse-preview-card">
+                <h2>Add Reminder</h2>
+                <form onSubmit={handleSubmit} className="horse-form">
+                    <select
+                        name="horseId"
+                        value={form.horseId}
+                        onChange={handleChange}
+                        required
+                        className="horse-form-input"
+                    >
+                        <option value="">Select Horse</option>
+                        {horses.map((horse) => (
+                            <option key={horse.HorseID} value={horse.HorseID}>
+                                {horse.Name}
+                            </option>
+                        ))}
+                    </select>
+                    <input
+                        type="text"
+                        name="type"
+                        value={form.type}
+                        onChange={handleChange}
+                        placeholder="Reminder Type"
+                        required
+                    />
+                    <input
+                        type="date"
+                        name="dueDate"
+                        value={form.dueDate}
+                        onChange={handleChange}
+                        required
+                    />
+                    <div className="horse-form-buttons">
+                        <button type="submit" className="view-link">Add Reminder</button>
+                    </div>
+                </form>
+            </div>
+            <Link to="/" className="home-button">
+                <HomeIcon className="home-icon" />
+            </Link>
         </div>
     );
 }

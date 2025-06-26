@@ -44,7 +44,7 @@ export default function Home() {
         
         <div className="home-container">
             <h1 className="home-title">Welcome to Equiwelf</h1>
-            {selectedHorse ? (
+            {selectedHorse && token ?(
                 <>
                     <div className="horse-preview-card">
                         <h2>{selectedHorse.Name}</h2>

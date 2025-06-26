@@ -35,19 +35,36 @@ export default function Auth() {
         }
     };
     return (
-        <div>
-            <h2>{mode === "register" ? "Register" : "Login"}</h2>
-            <form onSubmit={handleSubmit}>
-                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" required />
-                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="password" required />
-                <button type="submit">{mode === "register" ? "Register" : "Login"}</button>
+        <div className="horse-preview-card">
+            <h2>{mode === "register" ? "register" : "Login"}</h2>
+            <form onSubmit={handleSubmit} className="horse-form">
+                <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Email"
+                    required
+                />
+                <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Password"
+                    required
+                />
+                <div className="horse-form-buttons">
+                    <button type="submit" className="view-link">
+                        {mode === "register" ? "Register" : "Login"}
+                    </button>
+                    <button
+                        type="button"
+                        className="view-link"
+                        onClick={() => setMode(mode === "register" ? "login" : "register")}
+                    >
+                        {mode === "register" ? "Login Instead" : "Register Instead"}
+                    </button>
+                </div>
             </form>
-            <p>
-                {mode === "register" ? "Already have an account? " : "Don't have an account?"}{""}
-                <button onClick={() => setMode(mode === "register" ? "login" : "register")}>
-                    {mode === "register" ? "Login here" : "Register here"}
-                </button>
-            </p>
         </div>
     );
 }

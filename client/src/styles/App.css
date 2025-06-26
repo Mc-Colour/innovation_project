@@ -233,6 +233,13 @@ body {
 }
 
 /* Horse editing form specifics */
+.horse-form {
+    max-width: 260px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 .horse-form input {
     width: 100%;
     margin-bottom: 0.75rem;
@@ -240,6 +247,7 @@ body {
     border: 1.5px solid #72a276;
     border-radius: 10px;
     font-size: 1rem;
+    text-align: center;
 }
 
 .horse-card-buttons,
@@ -249,3 +257,16 @@ body {
     gap: 1rem;
     flex-wrap: wrap;
 }
+
+.horse-form select {
+    width: 100%;
+    margin-bottom: 0.75rem;
+    padding:0.5rem;
+    border: 1.5px solid #72a276;
+    border-radius: 10px;
+    font-size: 1rem;
+    background-color: #fff;
+    text-align: center;
+
+}
+    

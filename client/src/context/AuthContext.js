@@ -1,12 +1,10 @@
 import { createContext, useState } from "react";
-
 // creates a global context obj for authentication
 export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
     // initialises the token state from local storage if user is already logged in
     const [token, setToken] = useState(localStorage.getItem("token") || "");
-
     const login = (newToken) => {
         setToken(newToken);
         localStorage.setItem("token", newToken); // store token in local storage
