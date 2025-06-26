@@ -85,6 +85,36 @@ export default function Home() {
                         )}
                         <Link to={`/reminders`} className="view-link">View All</Link>
                     </div>
+
+                    <div className="body-score-card">
+                        <h2>Body Condition Scoring</h2>
+                        <div className="bcs-bar">
+                            
+                            <div className="bcs-bars">
+                                <div className="bcs-bar-segment red">1 Unhealthy (Thin)</div>
+                                <div className="bcs-bar-segment yellow">2 Moderate (Lean)</div>
+                                <div className="bcs-bar-segment green">3 Healthy (Good)</div>
+                                <div className="bcs-bar-segment yellow">4 Unhealthy (Fat)</div>
+                                <div className="bcs-bar-segment red">5 Very Unhealthy (Obese)</div>
+                            </div>
+                            <p className="bcs-score">2.5 - Healthy (Good)</p>
+                        </div>
+                    </div>
+
+                    <div className="diet-exercise-card">
+                        <h2>Diet</h2>
+                        <div className="diet-box">
+                            <p>3kg oats and barley mix<br /><small>9am</small></p>
+                            <p>1kg Beet Pulp<br /><small>3pm</small></p>
+                        </div>
+                        <h2>Exercise</h2>
+                        <div className="exercise-box">
+                            <p>30 minute rdie<br /><small>10am</small></p>
+                            <p>40 minute ride<br /><small>1pm</small></p>
+                        </div>
+                    </div>
+                        
+                    
                 </>
             ) : (
                 <>
