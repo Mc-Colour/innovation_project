@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { ReactComponent as HomeIcon } from '../img/Home.svg'; // Importing SVG icon
 
 const articles = [
     {
@@ -35,28 +37,26 @@ export default function Education() {
     };
 
     return (
-        <div>
-            <h2>Education Zone</h2>
+        <div className="home-container ">
+            <h2 className="home-title">Education Zone</h2>
             {articles.map((article) => (
-                <div key={article.id} style={{
-                    border: "1px solid #ccc",
-                    borderRadius: "10px",
-                    margin: "1rem 0",
-                    padding: "1rem",
-                }}>
+                <div key={article.id} className="education-card">
                     <h3>{article.title}</h3>
                     <p>{article.summary}</p>
 
                     {expanded[article.id] && (
-                        <div style={{ marginTop: "0.5rem"}}>
+                        <div className="article-content">
                             <p>{article.content}</p>
                         </div>
                     )}
-                    <button onClick={() => toggleExpanded(article.id)}>
+                    <button className="view-link" onClick={() => toggleExpanded(article.id)}>
                         {expanded[article.id] ? "Show Less" : "Read More"}
                     </button>
                 </div>
             ))}
+            <Link to="/" className="home-button">
+                <HomeIcon className="home-icon" />
+            </Link>
         </div>
     );
 }
