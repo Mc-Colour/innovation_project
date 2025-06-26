@@ -6,6 +6,8 @@ import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext"; // import AuthContext to access user info
 import { Link } from "react-router-dom"; // import Link to navigate to horse details
 import { SelectedHorseContext } from "../context/SelectedHorseContext"; // import SelectedHorseContext to manage selected horse state
+import { ReactComponent as HomeIcon } from '../img/Home.svg'; // Importing SVG icon
+
 import React, {
     useState,
     useEffect,
@@ -101,79 +103,89 @@ export default function Horses() {
         }
     };
     return (
-        <div>
-            <h2>My Horses</h2>
-            {horses.length === 0 ? (
-                <p>No horses found. Add your first horse!</p>
-            ) : (
-                <>
-                <>{selectedHorse && <p>Currently selected: {selectedHorse.Name}</p>}
-                <ul>
-                    {horses.map((horse) => (
-                        <li key={horse.HorseID}>
-                            <Link to={`/horses/${horse.HorseID}`}>
-                                {horse.Name} - {horse.Breed} ({horse.Age} years old)
-                            </Link>
-                            <button onClick={() => setSelectedHorse(horse)}>Select</button>
-                            {token && (
-                                <>
-                                    <button onClick={() => {
-                                        setForm({
-                                            name: horse.Name,
-                                            breed: horse.Breed,
-                                            age: horse.Age,
-                                            weight: horse.CurrentWeight
-                                        });
-                                        setEditingID(horse.HorseID); // set the ID of the horse being edited
-                                    }}>
-                                        Edit
-                                    </button>
-                                    <button onClick={() => { handleDelete(horse.HorseID); }}>Delete</button>
-                                </>
-                            )}
-                        </li>
-                    ))}
-                </ul>
-                </>
-                </>
-            )}
-            <h3>Add a New Horse</h3> 
-            {!token ? (
-                <p>Please log in to add horses.</p>
-            ) : (
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="text"
-                    name="name"
-                    placeholder="Name"
-                    value={form.name}
-                    onChange={handleChange}
-                    required
-                />
-                <input
-                    type="text"
-                    name="breed"
-                    placeholder="Breed"
-                    value={form.breed}
-                    onChange={handleChange}
-                />
-                <input
-                    type="number"
-                    name="age"
-                    placeholder="Age"
-                    value={form.age}
-                    onChange={handleChange}
-                />
-                <input
-                    type="number"
-                    name="weight"
-                    placeholder="Weight"
-                    value={form.weight}
-                    onChange={handleChange}
-                />
-                <button type="submit">{editingID? "Edit Horse" : "Add Horse"}</button>
-            </form>
-            )}
+        <div className="home-container">
+            <h1 className="home-title">Manage Your Horses</h1>
+            {horses.map(horse=> (
+                <div key={horse.HorseID} className="horse-preview-card">
+                    <h2>{horse.Name}</h2>
+                    <p><strong>Breed:</strong> {horse.Breed || "N/A"}</p>
+                    <p><strong>Age:</strong> {horse.Age} years</p>
+                    <p><strong>Weight:</strong> {horse.CurrentWeight} kg</p>
+                    <div className="horse-card-buttons">
+                        <button 
+                        className="view-link"
+                        disabled={selectedHorse?.HorseID === horse.HorseID} // disable if already selected
+                        onClick={() => setSelectedHorse(horse)}
+                    >
+                        {selectedHorse?.HorseID === horse.HorseID ? "Selected" : "Select"}
+                    </button>
+
+                        <button className="view-link" onClick={() => {
+                            setForm({
+                                name: horse.Name,
+                                breed: horse.Breed,
+                                age: horse.Age,
+                                weight: horse.CurrentWeight
+                            });
+                            setEditingID(horse.HorseID); // set ID for editing
+                        }}>Edit</button>
+                        <button className="view-link" onClick={() => handleDelete(horse.HorseID)}>Delete</button>
+                    </div>
+                </div>
+            ))}
+
+            <div className="horse-preview-card">
+                <h2>{editingID? "Edit Horse" : "Add a New Horse"}</h2>
+                <form onSubmit={handleSubmit} className="horse-form">
+                    <input
+                        type="text"
+                        name="name"
+                        placeholder="Horse Name"
+                        value={form.name}
+                        onChange={handleChange}
+                        required
+                    />
+                    <input
+                        type="text"
+                        name="breed"
+                        placeholder="Breed"
+                        value={form.breed}
+                        onChange={handleChange}
+                    />
+                    <input
+                        type="number"
+                        name="age"
+                        placeholder="Age (years)"
+                        value={form.age}
+                        onChange={handleChange}
+                    />
+                    <input
+                        type="number"
+                        name="weight"
+                        placeholder="Weight (kg)"
+                        value={form.weight}
+                        onChange={handleChange}
+                    />
+                    <div className="horse-form-buttons">
+                        <button type="submit" className="view-link">
+                            {editingID ? "Save" : "Add Horse"}
+                        </button>
+                        <button
+                            type="submit"
+                            className="view-link"
+                            onClick={() => {
+                                setForm({ name: "", breed: "", age: "", weight: "" });
+                                setEditingID(null); // reset editing ID
+                            }}>cancel
+                        </button>
+                        
+                    </div>
+                </form>
+            </div>
+            <Link to="/" className="home-button">
+                <HomeIcon className="home-icon" />
+            </Link>
+            
         </div>
     );
 }

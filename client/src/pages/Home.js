@@ -51,7 +51,7 @@ export default function Home() {
                         <p><strong>Breed:</strong> {selectedHorse.Breed || "N/A"}</p>
                         <p><strong>Age:</strong> {selectedHorse.Age} years </p>
                         <p><strong>Weight:</strong> {selectedHorse.CurrentWeight} kg</p>
-                        <Link to={`/horses/${selectedHorse.HorseID}`} className="view-link">View Horse</Link>
+                        <Link to={`/horses`} className="view-link">View Horses</Link>
                     </div>
 
                     <div className="weight-summary-card">
