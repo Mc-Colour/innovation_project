@@ -6,10 +6,12 @@ import "../styles/App.css";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext"; // Import AuthContext for authentication
 
+
 export default function Home() {
     const { selectedHorse } = useSelectedHorse();
     const [weights, setWeights] = React.useState([]); // State to hold weight data
     const {token} = useContext(AuthContext); // Get token from AuthContext
+    const [careReminders, setReminders] = React.useState([]); // State to hold care reminders
 
     useEffect(() => {
         // Fetch weight data for the selected horse
@@ -22,7 +24,20 @@ export default function Home() {
         .then(res => setWeights(res.data.slice(0, 5)))
         .catch((err) => console.error("Error fetching weight data:", err));
     }, [selectedHorse, token]);
-    
+
+    useEffect(() => {
+        // Fetch care remindrs
+        if (!selectedHorse || !token) return;
+        axios.get(`http://localhost:3001/api/reminders`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+        .then(res => setReminders(res.data.slice(0, 3))) // Log the first 3 reminders for now
+        .catch((err) => console.error("Error fetching care reminders:", err));
+    }, [selectedHorse, token]);
+
+            
 
     
     return (
@@ -54,9 +69,29 @@ export default function Home() {
                         )}
                         <Link to={`/horses/${selectedHorse.HorseID}/weight`} className="view-link">Log Weight</Link>
                     </div>
+
+                    <div className="care-reminder-card">
+                        <h2>Care Reminders</h2>
+                        {careReminders.length > 0 ? (
+                            <ul className="reminder-list">
+                                {careReminders.map(r=> (
+                                    <li key={r.ReminderID}>
+                                        {r.Type} - Due: {new Date(r.DueDate).toLocaleDateString()} - {r.HorseName}
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p>No care reminders set</p>
+                        )}
+                        <Link to={`/reminders`} className="view-link">View All</Link>
+                    </div>
                 </>
             ) : (
-                <p className="no-selection">Please select horse</p>
+                <>
+                    <p className="no-selection">Please select horse</p>
+                    <Link to={`/horses`} className="view-link">View Horses</Link>
+                </>
+                
             )}
         </div>   
     );
